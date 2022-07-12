@@ -53,18 +53,49 @@ const CoffeeStore = (initialProps) => {
     
     const { name, address, neighborhood, imgUrl } = coffeeStore;
 
-    console.log("initialProps.coffeeStore", initialProps.coffeeStore);
+    const handleCreateCoffeeStore = async (coffeeStore) => {
+        try {
+            const { id, name, voting, imgUrl, neighborhood, address } = coffeeStore
+
+            const response = await fetch('/api/createCoffeeStore', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ 
+                    id, 
+                    name, 
+                    voting: 0, 
+                    imgUrl, 
+                    neighborhood: neighborhood || "", 
+                    address: address || "" 
+                })
+            })
+
+            const dbCoffeeStore = response.json()
+            console.log({ dbCoffeeStore })
+        } catch(err) {
+            console.error('Error creating coffee store', err)
+        }
+    }
 
     useEffect(() => {
         if(isEmpty(initialProps.coffeeStore)) {
             if(coffeeStores.length > 0) {
-                const findCoffeeStoreById = coffeeStores.find(coffeeStore => {
+                const coffeeStoreFromContext = coffeeStores.find(coffeeStore => {
                     return coffeeStore.id.toString() === id
                 })
-                setCoffeeStore(findCoffeeStoreById)
+
+                if (coffeeStoreFromContext) {
+                    setCoffeeStore(coffeeStoreFromContext)
+                    handleCreateCoffeeStore(coffeeStoreFromContext)
+                }
             }
+        } else {
+            // SSG
+            handleCreateCoffeeStore(initialProps.coffeeStore)
         }
-    }, [id])
+    }, [id, initialProps, initialProps.coffeeStore])
 
     const handleUpvoteButton = () => {
         console.log("handle upvote")
