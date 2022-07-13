@@ -47,6 +47,8 @@ const CoffeeStore = (initialProps) => {
 
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
 
+    const [votingCount, setVotingCount] = useState(1);
+
     const {
         state: { coffeeStores },
     } = useContext(StoreContext);
@@ -98,7 +100,9 @@ const CoffeeStore = (initialProps) => {
     }, [id, initialProps, initialProps.coffeeStore])
 
     const handleUpvoteButton = () => {
-        console.log("handle upvote")
+        console.log("handle upvote!");
+        let count = votingCount + 1;
+        setVotingCount(count);
     }
 
     if(router.isFallback) {
@@ -137,7 +141,7 @@ const CoffeeStore = (initialProps) => {
                     )}
                     <div className={styles.iconWrapper}>
                         <Image src="/static/icons/star.svg" width="24" height="24" alt="icon"/>
-                        <p className={styles.text}>1</p>
+                        <p className={styles.text}>{votingCount}</p>
                     </div>
                     <button className={styles.upvoteButton} onClick={handleUpvoteButton}>Up Vote!</button>
                 </div>
