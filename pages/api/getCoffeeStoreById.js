@@ -1,16 +1,13 @@
-import { table, getMinifiedRecords } from '../../lib/airtable';
+import { table, getMinifiedRecords, findRecordByFilter } from '../../lib/airtable';
 
-const getCoffeeStoresById = async (req, res) => {
+const getCoffeeStoreById = async (req, res) => {
     const {id} = req.query;
 
     try {
         if(id) {
-            const findCoffeeStoreRecords = await table.select({
-                filterByFormula: `id="${id}"`
-            }).firstPage();
+            const records = await findRecordByFilter(id)
 
-            if(findCoffeeStoreRecords.length !== 0) {
-                const records = getMinifiedRecords(findCoffeeStoreRecords)
+            if(records.length !== 0) {
                 res.json(records);
             } else {
                 res.json({message: `ID could not be found`})
@@ -25,4 +22,4 @@ const getCoffeeStoresById = async (req, res) => {
     }
 }
 
-export default getCoffeeStoresById;
+export default getCoffeeStoreById;
