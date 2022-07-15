@@ -15,7 +15,6 @@ import React from 'react';
 import { ACTION_TYPES, StoreContext } from "../store/store-context";
 
 export async function getStaticProps(context) {
-  console.log("hi getStaticProps");
 
   const coffeeStores = await fetchCoffeeStores();
 
@@ -38,15 +37,13 @@ export default function Home(props) {
 
   const { coffeeStores, latLong } = state;
 
-  console.log({ latLong, locationErrorMsg })
-
   useEffect(() => {
     async function setCoffeeStoresByLocation() {
       if(latLong) {
         try {
           const response = await fetch(`/api/getCoffeeStoresByLocation?latLong=${latLong}&limit=30`);
           const coffeeStores = await response.json();
-          console.log('fetched coffee stores', {coffeeStores});
+          // console.log('fetched coffee stores', {coffeeStores});
           // setCoffeeStores(fetchedCoffeeStores)
           dispatch({
             type: ACTION_TYPES.SET_COFFEE_STORES,
@@ -66,7 +63,6 @@ export default function Home(props) {
   }, [latLong])
 
   const handleOnBannerBtnClick = () => {
-    console.log("hi banner button")
     handleTrackLocation()
   }
 
